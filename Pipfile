@@ -1,0 +1,19 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+django = "*"
+psycopg2 = "*"
+environs = {extras = ["django"], version = "*"}
+whitenoise = "*"
+django-allauth = "*"
+pillow = "*"
+django-tailwind = {extras = ["reload"], version = "*"}
+
+[dev-packages]
+pre-commit = "*"
+
+[requires]
+python_version = "3.13"

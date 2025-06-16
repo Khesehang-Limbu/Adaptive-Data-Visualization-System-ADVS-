@@ -1,0 +1,10 @@
+target-version = "py313"
+
+[tool.black]
+target-version = ["py312",]
+
+[tool.autoflake]
+imports = ["django", "requests", "urllib3"]
+
+[tool.isort]
+profile = "black"

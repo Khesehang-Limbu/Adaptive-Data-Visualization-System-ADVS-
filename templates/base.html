@@ -1,0 +1,24 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Adaptive Data Visualization System (ADVS){% endblock %}</title>
+
+    {% tailwind_css %}
+
+    {% block extra_css %}
+    {% endblock %}
+</head>
+<body>
+    {% include "partials/header.html" %}
+
+    {% block content %}
+    {% endblock %}
+
+    {% include "partials/footer.html" %}
+
+    {% block extra_js %}
+    {% endblock %}
+</body>
+</html>
