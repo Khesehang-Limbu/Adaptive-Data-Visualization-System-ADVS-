@@ -1,11 +1,14 @@
 {% load static tailwind_tags %}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Adaptive Data Visualization System (ADVS){% endblock %}</title>
 
+    <link href="{% static 'css/style.css' %}" rel="stylesheet" />
     {% tailwind_css %}
+
 
     {% block extra_css %}
     {% endblock %}
@@ -18,6 +21,8 @@
 
     {% include "partials/footer.html" %}
 
+    <!-- HTMX -->
+    <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.6/dist/htmx.min.js" integrity="sha384-Akqfrbj/HpNVo8k11SXBb6TlBWmXXlYQrCSqEWmyKJe+hDm3Z/B2WVG4smwBkRVm" crossorigin="anonymous"></script>
     {% block extra_js %}
     {% endblock %}
 </body>

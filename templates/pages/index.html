@@ -1,1 +1,68 @@
 {% extends 'base.html' %}
+
+{% block content %}
+    <!-- Hero Section -->
+    <section class="bg-blue-50 py-16 px-4 sm:px-6">
+        <div class="max-w-5xl mx-auto text-center">
+            <h2 class="text-3xl sm:text-4xl font-extrabold mb-4 text-blue-700">Uncover Hidden Insights Instantly</h2>
+            <p class="text-base sm:text-lg mb-6 text-gray-700">Our platform uses AI to adaptively analyze your data and
+                generate the most effective visualizations—tailored just for you.</p>
+            <a href="#features"
+               class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition text-sm sm:text-base">Explore
+                Features
+            </a>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-16 px-4 sm:px-6">
+        <div class="max-w-6xl mx-auto">
+            <h3 class="text-2xl sm:text-3xl font-bold text-center text-gray-800 mb-10">Core Features</h3>
+            <div class="grid gap-8 md:grid-cols-3 sm:grid-cols-1">
+                <div class="bg-white rounded-xl shadow p-6 text-center">
+                    <h4 class="text-lg font-semibold text-blue-600 mb-2">Adaptive Analysis</h4>
+                    <p class="text-gray-600 text-sm">Dynamically selects the best analytical methods based on your
+                        dataset’s structure and content.</p>
+                </div>
+                <div class="bg-white rounded-xl shadow p-6 text-center">
+                    <h4 class="text-lg font-semibold text-blue-600 mb-2">AI Visualization Suggestion</h4>
+                    <p class="text-gray-600 text-sm">Recommends optimal chart types—from line graphs to complex
+                        heatmaps—automatically.</p>
+                </div>
+                <div class="bg-white rounded-xl shadow p-6 text-center">
+                    <h4 class="text-lg font-semibold text-blue-600 mb-2">Automated Summary</h4>
+                    <p class="text-gray-600 text-sm">Explains key trends, patterns, and outliers with natural-language
+                        AI-generated summaries.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Visualization Summary -->
+    <section class="bg-white py-16 px-4 sm:px-6">
+        <div class="max-w-4xl mx-auto text-center">
+            <h3 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-6">AI-Generated Insight Summary</h3>
+            <div class="bg-gray-100 p-6 sm:p-8 rounded-xl shadow text-left text-sm sm:text-base">
+                <h4 class="text-lg font-semibold text-gray-700 mb-3">📊 Dataset: Customer Churn Analysis</h4>
+                <p class="text-gray-700 leading-relaxed">
+                    Our analysis reveals a significant churn risk among mobile-only subscribers aged 25–34. These users
+                    are highly sensitive to service disruptions.
+                    <br><br>
+                    The AI recommends a heatmap to visualize churn probability by region and age. A time-series forecast
+                    suggests churn may increase by 12% next quarter without proactive measures.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section id="get-started" class="bg-blue-600 py-14 px-4 sm:px-6 text-white text-center">
+        <h3 class="text-2xl sm:text-3xl font-bold mb-4">Ready to Unlock Smarter Data Insights?</h3>
+        <p class="mb-6 text-sm sm:text-base">Upload your dataset and let our AI-powered engine handle the rest—from
+            analysis to visualization.</p>
+        <a href="#"
+           class="bg-white text-blue-600 font-semibold px-6 py-3 rounded-lg hover:bg-gray-100 transition text-sm sm:text-base">Upload
+            Your Data
+        </a>
+    </section>
+{% endblock %}

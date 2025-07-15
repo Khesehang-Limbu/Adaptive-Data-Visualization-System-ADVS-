@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 
+from django.contrib.messages import constants as messages
 from environs import Env
 
 env = Env()
@@ -159,8 +160,26 @@ ACCOUNT_LOGIN_METHODS = {"email"}
 
 AUTH_USER_MODEL = "authuser.AuthUser"
 
+LOGIN_REDIRECT_URL = "home"
+ACCOUNT_LOGOUT_REDIRECT_URL = "home"
+ACCOUNT_SIGNUP_REDIRECT_URL = "home"
+
+ACCOUNT_FORMS = {
+    "login": "apps.authuser.forms.AuthUserLoginForm",
+    "signup": "apps.authuser.forms.AuthUserRegisterForm",
+}
+
 # Tailwind
 TAILWIND_APP_NAME = "theme"
+
+# Messages
+MESSAGE_TAGS = {
+    messages.DEBUG: "bg-gray-100 text-gray-800 border-gray-300",
+    messages.INFO: "bg-blue-100 text-blue-800 border-blue-300",
+    messages.SUCCESS: "bg-green-100 text-green-800 border-green-300",
+    messages.WARNING: "bg-yellow-100 text-yellow-800 border-yellow-300",
+    messages.ERROR: "bg-red-100 text-red-800 border-red-3001",
+}
 
 if DEBUG:
     from .local import *  # noqa
