@@ -40,6 +40,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "daphne",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -59,6 +60,7 @@ INSTALLED_APPS = [
     # Local
     "apps.pages",
     "apps.authuser",
+    "apps.visualization",
 ]
 
 AUTHENTICATION_BACKENDS = [
@@ -136,7 +138,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = "static/"
-STATIC_ROOT = BASE_DIR / "static"
+STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -160,13 +165,14 @@ ACCOUNT_LOGIN_METHODS = {"email"}
 
 AUTH_USER_MODEL = "authuser.AuthUser"
 
-LOGIN_REDIRECT_URL = "home"
+LOGIN_REDIRECT_URL = "dashboard:home"
 ACCOUNT_LOGOUT_REDIRECT_URL = "home"
-ACCOUNT_SIGNUP_REDIRECT_URL = "home"
+ACCOUNT_SIGNUP_REDIRECT_URL = "dashboard:home"
 
 ACCOUNT_FORMS = {
     "login": "apps.authuser.forms.AuthUserLoginForm",
     "signup": "apps.authuser.forms.AuthUserRegisterForm",
+    "change_password": "apps.authuser.forms.AuthUserChangePasswordForm",
 }
 
 # Tailwind
@@ -180,6 +186,15 @@ MESSAGE_TAGS = {
     messages.WARNING: "bg-yellow-100 text-yellow-800 border-yellow-300",
     messages.ERROR: "bg-red-100 text-red-800 border-red-3001",
 }
+
+# Channels
+ASGI_APPLICATION = "core.asgi.application"
+CHANNEL_LAYERS = {"default": {"BACKEND": "channels.layers.InMemoryChannelLayer"}}
+
+# Celery Config
+CELERY_BROKER_URL = "redis://127.0.0.1:6379/0"
+CELERY_RESULT_BACKEND = "redis://127.0.0.1:6379/0"
+
 
 if DEBUG:
     from .local import *  # noqa

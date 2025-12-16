@@ -1,0 +1,66 @@
+<details
+        id="context-{{ ctx.pk }}"
+        class="border rounded-lg bg-white shadow-sm overflow-hidden mb-4"
+>
+    <summary class="cursor-pointer px-4 py-3 text-sm font-medium text-gray-800 bg-gray-50 hover:bg-gray-100">
+        {{ ctx.text }} - {{ ctx.uploaded_at|date:"M d, Y H:i" }}
+    </summary>
+
+    <div class="px-4 py-4 space-y-4">
+        {% if not ctx.status == "completed" %}
+            <div class="flex items-center gap-3 text-gray-500">
+                <div class="animate-spin h-5 w-5 border-4 border-gray-300 border-t-blue-500 rounded-full"></div>
+                <span>Generating visualizations...</span>
+            </div>
+        {% else %}
+            {% if ctx.get_chart_config_plotly %}
+                <div class="space-y-6">
+                    {% for chart in ctx.get_chart_config_plotly %}
+                        <div id="chart-ctx-{{ ctx.pk }}-{{ forloop.counter0 }}"
+                             style="height: 300px; width: 100%;"></div>
+                        {% if chart.summary %}
+                            <p class="mt-2 text-xs text-gray-600">{{ chart.summary }}</p>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+</details>
+
+<script>
+    var socket = new WebSocket("ws://" + window.location.host + "/ws/ctx/{{ ctx.pk }}/");
+
+    socket.onmessage = function (event) {
+        const data = JSON.parse(event.data);
+
+        if (data.type === "chart_ready") {
+
+            const charts = data.charts;
+
+            const container = document.querySelector("#context-{{ ctx.pk }} .px-4.py-4");
+
+            container.innerHTML = "";
+            charts.forEach((chart, idx) => {
+                const div = document.createElement("div");
+                div.id = `chart-ctx-{{ ctx.pk }}-${idx}`;
+                div.style.height = "300px";
+                div.style.width = "100%";
+                container.appendChild(div);
+
+                Plotly.newPlot(
+                    div.id,
+                    chart.plotly_data,
+                    chart.plotly_layout
+                );
+
+                if (chart.summary) {
+                    const p = document.createElement("p");
+                    p.className = "mt-2 text-xs text-gray-600";
+                    p.textContent = chart.summary;
+                    container.appendChild(p);
+                }
+            });
+        }
+    };
+</script>

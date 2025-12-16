@@ -1,0 +1,214 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Upload Dataset{% endblock %}
+
+{% block extra_css %}
+    <style>
+        .fade-in {
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="max-w-7xl mx-auto px-4">
+        {% if latest_upload.status == "completed" %}
+            <div id="recommendations-view" class="fade-in">
+                <div class="bg-white border border-gray-200 rounded-lg p-6 mb-8 shadow-sm flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor"
+                             viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900">Active Dataset with Recommendations</h3>
+                            <p class="text-sm text-gray-600">
+                                File: <span class="font-medium">{{ latest_upload.file.name }}</span> |
+                                Uploaded: {{ latest_upload.uploaded_at|date:"M d, Y h:i A" }}
+                            </p>
+                        </div>
+                    </div>
+                    <button
+                            onclick="showUploadForm()"
+                            class="flex items-center px-4 py-2 border border-gray-300 rounded-lg bg-white hover:bg-gray-50 font-medium text-gray-700 hover:shadow transition"
+                    >
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+                        </svg>
+                        Upload New File
+                    </button>
+                </div>
+
+                <div class="recommendations-container">
+                    {% include "dashboard/partials/charts.html" with charts_data=latest_upload.get_chart_config %}
+                </div>
+            </div>
+
+            <!-- Upload Section (Hidden by default) -->
+            <div id="upload-section" class="hidden">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-gray-900">Upload a New Dataset</h2>
+                    <button
+                            onclick="showRecommendations()"
+                            class="flex items-center text-gray-600 hover:text-gray-900 font-medium"
+                    >
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                        </svg>
+                        Back to Recommendations
+                    </button>
+                </div>
+                {% include "dashboard/partials/upload_form.html" %}
+            </div>
+
+        {% else %}
+            <div id="upload-section" class="fade-in">
+                {% if latest_upload %}
+                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6 flex items-center space-x-4">
+                        <svg class="w-5 h-5 text-yellow-600 flex-shrink-0" fill="none" stroke="currentColor"
+                             viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                        </svg>
+                        <div>
+                            <p class="text-sm font-medium text-yellow-800">
+                                You have an uploaded file: <span
+                                    class="font-semibold">{{ latest_upload.file.name }}</span>
+                            </p>
+                            <p class="text-xs text-yellow-700 mt-1">
+                                Provide context below to generate chart recommendations.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto rounded-xl shadow mb-8 bg-white border border-gray-100">
+                        {{ latest_upload.generate_styled_table|safe }}
+                    </div>
+
+                    <h2 class="text-xl font-bold text-gray-800 mb-3">Recommendations based on your dataset</h2>
+                    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 my-6">
+                        {% for rec in latest_upload.top_candidate_charts %}
+                            <div class="bg-white rounded-xl shadow p-6 flex flex-col h-full">
+                                <div class="flex items-center mb-4">
+                                    <h3 class="text-xl font-semibold text-gray-900">{{ rec.chart_type|capfirst }}</h3>
+                                </div>
+                                <ul class="space-y-2 mt-2">
+                                    {% for field, col in rec.fields.items %}
+                                        <li class="flex items-center justify-between border-b border-gray-100 pb-2 last:pb-0 last:border-none">
+                                            <span class="text-gray-500 font-medium">{{ field|capfirst }}</span>
+                                            <span class="bg-indigo-100 text-indigo-700 rounded px-2 py-1 text-sm font-mono">{{ col }}</span>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- User Context Form -->
+                    <div class="max-w-7xl mx-auto px-4">
+
+                        <div class="bg-white rounded-xl shadow p-6 mb-8">
+                            <h2 class="text-xl font-bold text-gray-800 mb-4">Add New Context</h2>
+                            <form hx-post="?action=process-context&upload_id={{ latest_upload.id }}"
+                                  hx-target="#context-accordion"
+                                  hx-swap="beforebegin"
+                                  class="space-y-4">
+
+                                {% csrf_token %}
+                                {{ formset.management_form }}
+
+                                {% with new_form=formset.forms|last %}
+                                    <div class="p-4 border rounded bg-blue-50">
+                                        {{ new_form.text }}
+                                        {% for hidden in new_form.hidden_fields %}
+                                            {{ hidden }}
+                                        {% endfor %}
+                                    </div>
+                                {% endwith %}
+
+                                <div class="flex justify-end mt-2">
+                                    <button type="submit"
+                                            class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded transition">
+                                        Generate Recommendations
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <h2 class="text-xl font-bold text-gray-800 mb-4">Previous Contexts</h2>
+                        <div id="context-accordion" class="space-y-3">
+                            {% for ctx in previous_contexts %}
+                                {% if ctx.text %}
+                                    <details class="border rounded shadow-sm bg-gray-50 cursor-pointer overflow-hidden">
+                                        <summary class="p-3 cursor-pointer font-medium hover:bg-gray-100">
+                                            {{ ctx.text }} - {{ ctx.uploaded_at|date:"M d, Y h:i A" }}
+                                        </summary>
+                                        <div class="p-4 space-y-3">
+                                            {% if ctx.recommendations %}
+                                                <div class="overflow-x-auto rounded-lg shadow p-4 bg-white border border-gray-200">
+                                                    {% include "dashboard/partials/charts.html" with charts_data=ctx.get_chart_config %}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </details>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+
+                    </div>
+                    <div id="content-container"></div>
+                {% endif %}
+
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">Upload a New Dataset</h2>
+                {% include "dashboard/partials/upload_form.html" %}
+            </div>
+        {% endif %}
+    </div>
+
+    <script>
+        function showUploadForm() {
+            document.getElementById('recommendations-view').classList.add('hidden');
+            const uploadSection = document.getElementById('upload-section');
+            uploadSection.classList.remove('hidden');
+            uploadSection.classList.add('fade-in');
+        }
+
+        function showRecommendations() {
+            document.getElementById('upload-section').classList.add('hidden');
+            const recs = document.getElementById('recommendations-view');
+            recs.classList.remove('hidden');
+            recs.classList.add('fade-in');
+        }
+
+        document.body.addEventListener('htmx:afterSwap', (e) => {
+            if (e.detail.target.id === 'context-accordion') {
+                const newPanel = e.detail.target.previousElementSibling;
+                if (newPanel && newPanel.tagName.toLowerCase() === 'details') {
+                    newPanel.open = true;
+                }
+            }
+
+            if (e.detail.target.id === 'content-container') {
+                console.log(e);
+            }
+        });
+
+        function renderChart(chart, ctx) {
+            new Chart(ctx, chart.chart_config);
+        }
+    </script>
+{% endblock %}

@@ -11,6 +11,16 @@ whitenoise = "*"
 django-allauth = "*"
 pillow = "*"
 django-tailwind = {extras = ["reload"], version = "*"}
+pandas = "*"
+beautifulsoup4 = "*"
+matplotlib = "*"
+seaborn = "*"
+scikit-learn = "*"
+joblib = "*"
+requests = "*"
+channels = "*"
+celery = "*"
+redis = "*"
 
 [dev-packages]
 pre-commit = "*"

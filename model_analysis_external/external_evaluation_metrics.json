@@ -1,0 +1,148 @@
+{
+  "overall": {
+    "exact_match_accuracy": 0.9,
+    "at_least_one_accuracy": 1.0
+  },
+  "per_class": {
+    "line": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "support": 1,
+      "roc_auc": null
+    },
+    "area": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "support": 0,
+      "roc_auc": null
+    },
+    "bar": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "support": 38,
+      "roc_auc": null
+    },
+    "pie": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "support": 38,
+      "roc_auc": null
+    },
+    "scatter": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "support": 13,
+      "roc_auc": null
+    },
+    "histogram": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "support": 8,
+      "roc_auc": null
+    },
+    "boxplot": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "support": 8,
+      "roc_auc": null
+    },
+    "heatmap": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "support": 0,
+      "roc_auc": null
+    },
+    "bubble": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "support": 12,
+      "roc_auc": null
+    },
+    "grouped_bar": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "support": 21,
+      "roc_auc": null
+    },
+    "stacked_bar": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "support": 21,
+      "roc_auc": null
+    },
+    "violin": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "support": 8,
+      "roc_auc": null
+    },
+    "treemap": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "support": 0,
+      "roc_auc": null
+    },
+    "donut": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "support": 38,
+      "roc_auc": null
+    },
+    "waterfall": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "support": 0,
+      "roc_auc": null
+    },
+    "timeline": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "support": 0,
+      "roc_auc": null
+    },
+    "map": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "support": 0,
+      "roc_auc": null
+    },
+    "sunburst": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "support": 0,
+      "roc_auc": null
+    },
+    "parallel_coordinates": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "support": 0,
+      "roc_auc": null
+    },
+    "sankey": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "support": 0,
+      "roc_auc": null
+    }
+  }
+}

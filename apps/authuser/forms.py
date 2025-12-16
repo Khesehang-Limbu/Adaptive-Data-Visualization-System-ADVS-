@@ -1,4 +1,4 @@
-from allauth.account.forms import LoginForm, SignupForm
+from allauth.account.forms import ChangePasswordForm, LoginForm, SignupForm
 from django import forms
 
 
@@ -43,3 +43,14 @@ class AuthUserRegisterForm(SignupForm):
                 "placeholder": "Confirm Password",
             }
         )
+
+
+class AuthUserChangePasswordForm(ChangePasswordForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget = forms.PasswordInput(
+                attrs={
+                    "class": "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm"
+                }
+            )

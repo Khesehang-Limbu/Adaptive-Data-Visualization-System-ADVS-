@@ -1,0 +1,17 @@
+{% for ctx in contexts %}
+<details class="bg-gray-50 rounded-xl p-4 mb-4 shadow-sm">
+    <summary class="font-semibold cursor-pointer py-2">
+        {{ ctx.created_at|date:"M j, Y, H:i" }}
+    </summary>
+
+    <div class="mt-4 space-y-4">
+        <p class="text-gray-700">{{ ctx.text }}</p>
+
+        {% if ctx.recommendations %}
+            {% include "dashboard/partials/charts.html" with charts_data=ctx.get_chart_config %}
+        {% endif %}
+    </div>
+</details>
+{% empty %}
+<p class="text-gray-500">No contexts yet.</p>
+{% endfor %}

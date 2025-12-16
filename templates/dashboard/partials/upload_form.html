@@ -1,0 +1,24 @@
+<form method="POST"
+      enctype="multipart/form-data"
+      class="bg-white shadow p-6 rounded-lg w-full max-w-lg"
+      hx-post="{% url 'upload' %}"
+      hx-swap="innerHTML"
+      hx-target="#data-preview-container"
+>
+    {% csrf_token %}
+    {{ form.as_div }}
+    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 mt-4">
+        Upload
+    </button>
+</form>
+
+<div id="data-preview-container" class="mt-6">
+    <div class="flex flex-col items-center justify-center text-center border border-dashed border-gray-300 p-6 rounded-lg bg-white text-gray-500">
+        <svg class="w-10 h-10 mb-2 text-blue-300" fill="none" stroke="currentColor" stroke-width="2"
+             viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+        </svg>
+        <p class="font-medium">Data preview will appear here</p>
+        <p class="text-sm text-gray-400">Upload a CSV file to see the first 10 rows</p>
+    </div>
+</div>

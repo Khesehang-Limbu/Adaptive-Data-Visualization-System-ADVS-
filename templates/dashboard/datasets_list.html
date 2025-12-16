@@ -1,0 +1,73 @@
+{% extends "dashboard/base.html" %}
+
+{% block content %}
+<div class="px-6 py-6">
+    <div class="flex items-center justify-between mb-6">
+        <h1 class="text-2xl font-semibold text-gray-800">Your Datasets</h1>
+
+        <button
+            hx-get="{% url 'dashboard:dataset-upload' %}"
+            hx-target="#modal-container"
+            hx-trigger="click"
+            class="px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition"
+        >
+            + Upload Dataset
+        </button>
+    </div>
+
+    {% if object_list %}
+    <div class="overflow-x-auto rounded-lg shadow">
+        <table class="min-w-full bg-white">
+            <thead class="bg-gray-50 text-left text-sm font-medium text-gray-600">
+                <tr>
+                    <th class="px-6 py-3">Name</th>
+                    <th class="px-6 py-3">Status</th>
+                    <th class="px-6 py-3">Uploaded</th>
+                    <th class="px-6 py-3 text-right">Action</th>
+                </tr>
+            </thead>
+
+            <tbody class="text-gray-700">
+                {% for item in object_list %}
+                <tr class="border-t hover:bg-gray-50">
+                    <td class="px-6 py-4">
+                        <div class="font-medium">{{ item.name }}</div>
+                        <div class="text-xs text-gray-500">{{ item.file.name }}</div>
+                    </td>
+
+                    <td class="px-6 py-4">
+                        {% if item.status == "completed" %}
+                            <span class="px-2 py-1 text-xs rounded bg-green-100 text-green-700">Completed</span>
+                        {% elif item.status == "pending" %}
+                            <span class="px-2 py-1 text-xs rounded bg-yellow-100 text-yellow-700">Pending</span>
+                        {% else %}
+                            <span class="px-2 py-1 text-xs rounded bg-gray-200 text-gray-700">{{ item.status }}</span>
+                        {% endif %}
+                    </td>
+
+                    <td class="px-6 py-4 text-sm">
+                        {{ item.uploaded_at|date:"M d, Y H:i" }}
+                    </td>
+
+                    <td class="px-6 py-4 text-right">
+                        <a href="{% url 'dashboard:dataset-detail' item.pk %}"
+                           class="text-blue-600 hover:text-blue-800">
+                            View →
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% else %}
+    <div class="text-center py-20 text-gray-500">
+        <p class="text-lg mb-4">No datasets uploaded yet.</p>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Modal container -->
+<div id="modal-container"></div>
+{% endblock %}

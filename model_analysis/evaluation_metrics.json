@@ -1,0 +1,128 @@
+{
+  "overall": {
+    "exact_match_accuracy": 0.9517241379310345,
+    "at_least_one_accuracy": 0.9517241379310345
+  },
+  "per_class": {
+    "line": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "support": 10
+    },
+    "area": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "support": 3
+    },
+    "bar": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "support": 50
+    },
+    "pie": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "support": 48
+    },
+    "scatter": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "support": 40
+    },
+    "histogram": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "support": 18
+    },
+    "boxplot": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "support": 13
+    },
+    "heatmap": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "support": 7
+    },
+    "bubble": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "support": 33
+    },
+    "grouped_bar": {
+      "precision": 0.6956521739130435,
+      "recall": 1.0,
+      "f1_score": 0.8205128205128205,
+      "support": 16
+    },
+    "stacked_bar": {
+      "precision": 0.6956521739130435,
+      "recall": 1.0,
+      "f1_score": 0.8205128205128205,
+      "support": 16
+    },
+    "violin": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "support": 13
+    },
+    "treemap": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "support": 0
+    },
+    "donut": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "support": 37
+    },
+    "waterfall": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "support": 0
+    },
+    "timeline": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "support": 0
+    },
+    "map": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "support": 0
+    },
+    "sunburst": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "support": 0
+    },
+    "parallel_coordinates": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "support": 0
+    },
+    "sankey": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "support": 0
+    }
+  }
+}

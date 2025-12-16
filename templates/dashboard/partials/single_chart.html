@@ -1,0 +1,13 @@
+<script id="custom-chart-data" type="application/json">{{ json_data|safe }}</script>
+
+<div class="mt-4 p-4 bg-white shadow rounded-2xl">
+    <canvas id="custom-preview-chart"></canvas>
+    <script>
+        renderChart("custom-preview-chart", {
+            type: "{{ chart_type }}",
+            data: JSON.parse(document.getElementById("custom-chart-data").textContent),
+            x: "{{ x_column }}",
+            y: "{{ y_column }}"
+        });
+    </script>
+</div>

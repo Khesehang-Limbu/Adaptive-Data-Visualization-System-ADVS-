@@ -1,0 +1,61 @@
+{% extends "dashboard/base.html" %}
+{% block content %}
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+        <div class="p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition">
+            <p class="text-gray-500 text-sm">Total Datasets</p>
+            <p class="text-3xl font-semibold mt-2">{{ total_datasets }}</p>
+        </div>
+
+        <div class="p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition">
+            <p class="text-gray-500 text-sm">Total Contexts</p>
+            <p class="text-3xl font-semibold mt-2">{{ total_contexts }}</p>
+        </div>
+
+        <div class="p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition">
+            <p class="text-gray-500 text-sm">Completed Analyses</p>
+            <p class="text-3xl font-semibold mt-2">{{ completed_analysis }}</p>
+        </div>
+    </div>
+
+
+    <h2 class="text-xl font-semibold mb-3">Recent Datasets</h2>
+
+    <div class="bg-white p-6 rounded-xl shadow-sm mb-10">
+        {% if request.user.get_all_datasets.all %}
+            <table class="w-full text-sm">
+                <thead>
+                <tr class="border-b">
+                    <th class="text-left p-2">Name</th>
+                    <th class="text-left p-2">Uploaded</th>
+                    <th class="text-left p-2">Status</th>
+                    <th class="text-left p-2">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for ds in request.user.get_all_datasets.all %}
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="p-2">{{ ds.name }}</td>
+                        <td class="p-2">{{ ds.uploaded_at|date:"M j, Y" }}</td>
+                        <td class="p-2">{{ ds.status }}</td>
+                        <td class="p-2">
+                            <a href="{% url 'dashboard:dataset-detail' ds.pk %}"
+                               class="text-blue-600 hover:underline">Open</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="text-gray-500 text-center py-6">No datasets uploaded yet.</p>
+            <div class="bg-white p-6 rounded-xl shadow-sm text-center text-gray-600 hover:shadow-md transition">
+                <p>
+                    Upload a dataset to get started.
+                    <a href="{% url 'dashboard:datasets' %}" class="text-blue-600 font-medium hover:underline">
+                        Upload
+                    </a>
+                </p>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

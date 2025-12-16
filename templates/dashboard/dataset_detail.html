@@ -1,0 +1,331 @@
+{% extends "dashboard/base.html" %}
+
+{% block content %}
+    <style>
+        @keyframes fade-in-up {
+            from {
+                opacity: 0;
+                transform: translate(-50%, 20px);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+        }
+
+        .animate-fade-in-up {
+            animation: fade-in-up 0.4s ease-out;
+        }
+    </style>
+
+
+    <h2 class="text-2xl font-bold mb-6">{{ object.name }}</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white p-6 rounded-xl shadow-sm">
+            <p class="text-gray-500 text-sm">Uploaded</p>
+            <p class="text-lg font-semibold">{{ object.uploaded_at }}</p>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow-sm">
+            <p class="text-gray-500 text-sm">Rows</p>
+            <p class="text-lg font-semibold">{{ object.get_df|length }}</p>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow-sm">
+            <p class="text-gray-500 text-sm">Contexts</p>
+            <p class="text-lg font-semibold">{{ object.get_all_contexts.count }}</p>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow-sm">
+            <p class="text-gray-500 text-sm">Status</p>
+            <p class="text-lg font-semibold">{{ object.get_status_display }}</p>
+        </div>
+    </div>
+
+    <div class="bg-white p-6 rounded-xl shadow-sm mb-8">
+        <h3 class="text-md font-semibold mb-4">Data Preview</h3>
+        <div class="overflow-x-auto">
+            {{ object.generate_styled_table|safe }}
+        </div>
+    </div>
+
+    <div class="bg-white p-6 rounded-xl shadow-sm mb-8">
+        <h3 class="text-md font-semibold mb-4">Dataset Summary</h3>
+
+        <div class="text-gray-700 leading-relaxed">
+            {% if not object.summary %}
+                <div class="bg-white p-6 rounded-xl shadow-sm mb-8">
+                    <h3 class="text-md font-semibold mb-4">Dataset Summary</h3>
+
+                    <div class="text-gray-700 leading-relaxed relative">
+                        <div id="dataset-summary">
+                            <span id="loading-text">Generating Summary<span id="cursor"
+                                                                            class="animate-pulse">|</span></span>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                {{ object.summary }}
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="bg-white p-6 rounded-2xl shadow-sm mb-8 mt-6">
+        <h3 class="text-lg font-semibold mb-4 text-gray-800">
+            Chart Visualizations for <span class="text-blue-600">{{ object.name }}</span>
+        </h3>
+
+        <!-- Tabs -->
+        <div id="chart-tabs" class="flex space-x-3 border-b pb-2">
+            {% for chart in object.top_candidate_charts %}
+                <button
+                        class="tab-btn px-4 py-2 border-b-2 font-medium transition-all text-gray-500 border-transparent hover:text-blue-600"
+                        data-tab="{{ forloop.counter0 }}"
+                >
+                    {{ chart.chart_type|capfirst }}
+                </button>
+            {% endfor %}
+        </div>
+
+        <div id="chart-panels" class="mt-6">
+            {% for chart in object.get_initial_recommendation_charts_plotly %}
+                <div class="chart-panel w-full" data-panel="{{ forloop.counter0 }}" style="display: none;">
+                    <div id="chartDiv{{ forloop.counter0 }}" class="w-full h-80"></div>
+
+                    <div>
+                        <p>{{ chart.reason }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="bg-white p-6 rounded-xl shadow-sm">
+        <h3 class="text-lg font-semibold mb-4">Analysis Contexts</h3>
+
+        <div id="contexts-container">
+            {% if object.get_all_contexts.count %}
+                {% for ctx in object.get_all_contexts %}
+                    {% include 'dashboard/partials/_context_partial.html' with ctx=ctx %}
+                {% endfor %}
+            {% else %}
+                <div id="no-context"
+                     class="bg-blue-50 border border-blue-200 rounded-xl p-6 text-center text-gray-700 shadow-sm">
+                    <svg class="mx-auto h-12 w-12 text-blue-400 mb-4" fill="none" stroke="currentColor"
+                         viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M12 4v16m8-8H4"/>
+                    </svg>
+                    <h3 class="text-lg font-semibold mb-2">No Contexts Yet</h3>
+                    <p class="text-sm text-gray-600">
+                        Add a context to your dataset by clicking the <span class="font-semibold">+ Add Context</span>
+                        button
+                        at the bottom-right. We'll generate insightful visualizations based on your data.
+                    </p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Floating button -->
+    <button
+            id="add-context-btn"
+            class="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white rounded-full p-4 shadow-lg z-50 cursor-pointer"
+            onclick="openContextModal()"
+            title="Add New Context"
+    >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+             viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 4v16m8-8H4"/>
+        </svg>
+    </button>
+
+    <!-- Modal backdrop -->
+    <div id="context-modal" class="fixed inset-0 bg-black/25 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-xl shadow-lg w-full max-w-md p-6 relative">
+            <button onclick="closeContextModal()" class="absolute top-3 right-3 text-gray-500 hover:text-gray-800">
+                ✕
+            </button>
+            <h3 class="text-lg font-semibold mb-4">Add New Context</h3>
+
+            <form hx-post="{% url 'dashboard:dataset-detail' object.pk %}"
+                  hx-target="#contexts-container"
+                  hx-swap="beforeend"
+                  class="space-y-4">
+
+                {% csrf_token %}
+                {{ formset.management_form }}
+                {% for form in formset %}
+                    <div>
+                        {{ form.text.label }}
+                        {{ form.text }}
+                        {% for hidden in form.hidden_fields %}
+                            {{ hidden }}
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+
+                <div class="flex justify-end mt-2">
+                    <button type="submit"
+                            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded cursor-pointer">
+                        Add Context
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {{ object.get_initial_recommendation_charts_plotly|json_script:"initial-recommended-charts" }}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const charts = JSON.parse(document.getElementById("initial-recommended-charts").textContent);
+
+            charts.forEach((chartConfig, idx) => {
+                const divId = 'chartDiv' + idx;
+                Plotly.newPlot(divId, chartConfig.chart_config.data, chartConfig.chart_config.layout, {responsive: true});
+            });
+
+            const tabButtons = document.querySelectorAll('#chart-tabs .tab-btn');
+            const panels = document.querySelectorAll('.chart-panel');
+
+            function showPanel(idx) {
+                panels.forEach(panel => panel.style.display = 'none');
+                tabButtons.forEach(btn => btn.classList.remove('!border-blue-600', '!text-blue-600'));
+
+                panels[idx].style.display = 'block';
+                tabButtons[idx].classList.add('!border-blue-600', '!text-blue-600');
+            }
+
+            if (panels.length > 0) showPanel(0);
+
+            tabButtons.forEach((btn, idx) => {
+                btn.addEventListener('click', () => showPanel(idx));
+            });
+        });
+    </script>
+
+    <script>
+        function openContextModal() {
+            const modal = document.getElementById('context-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeContextModal() {
+            const modal = document.getElementById('context-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        document.getElementById('context-modal').addEventListener('click', function (e) {
+            if (e.target === this) closeContextModal();
+        });
+    </script>
+
+    <script>
+        const hasSummary = Number("{{ object.summary|length }}") !== 0;
+
+
+        if (!hasSummary) {
+            const objectId = Number({{ object.pk }});
+            const socket = new WebSocket(`ws://localhost:8000/ws/summary/${objectId}/`);
+
+            socket.onopen = () => {
+                socket.send(JSON.stringify({action: "start", pk: objectId}));
+            };
+
+            socket.onmessage = (e) => {
+                const data = JSON.parse(e.data);
+                const container = document.getElementById("dataset-summary");
+                const cursor = document.getElementById("cursor");
+
+                if (data.token) {
+                    const loadingText = document.getElementById("loading-text");
+                    if (loadingText) loadingText.remove();
+
+                    const span = document.createElement("span");
+                    span.innerHTML = data.token;
+                    container.appendChild(span);
+
+                    if (cursor) container.appendChild(cursor);
+                }
+
+                if (data.done) {
+                    console.log("Summary completed.");
+                    if (cursor) container.removeChild(cursor);
+                }
+            };
+        }
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.addEventListener("htmx:configRequest", function (event) {
+                const form = event.target;
+
+                if (form.closest("#context-modal")) {
+                    const submitBtn = form.querySelector("button[type='submit']");
+
+                    if (submitBtn) {
+                        submitBtn.disabled = true;
+                        submitBtn.classList.add("opacity-70", "cursor-not-allowed");
+
+                        submitBtn.innerHTML = `
+                    <svg class="animate-spin h-5 w-5 text-white mx-auto"
+                         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10"
+                                stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor"
+                              d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                    </svg>
+                `;
+                    }
+                }
+            });
+
+            // On successful HTMX swap of contexts container
+            document.addEventListener("htmx:afterSwap", function (event) {
+                if (event.detail.target.id === "contexts-container") {
+                    closeContextModal();
+
+                    showToast("Context added successfully! Visualizations will appear shortly.");
+
+                    const modal = document.getElementById("context-modal");
+                    const submitBtn = modal.querySelector("button[type='submit']");
+
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.classList.remove("opacity-70", "cursor-not-allowed");
+                        submitBtn.textContent = "Add Context";
+                    }
+                }
+            });
+
+            document.addEventListener("htmx:beforeSwap", function (event) {
+                if (event.detail.target.id === "contexts-container") {
+                    const noContext = event.detail.target.querySelector("#no-context");
+                    if (noContext) {
+                        noContext.remove();
+                    }
+                }
+            })
+
+
+            function showToast(message) {
+                const toast = document.createElement("div");
+                toast.className =
+                    "fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg animate-fade-in-up";
+                toast.innerText = message;
+
+                document.body.appendChild(toast);
+
+                setTimeout(() => {
+                    toast.classList.add("opacity-0", "transition-opacity");
+                    setTimeout(() => toast.remove(), 700);
+                }, 2500);
+            }
+        });
+    </script>
+{% endblock %}

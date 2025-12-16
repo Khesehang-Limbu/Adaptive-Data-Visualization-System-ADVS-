@@ -1,0 +1,17 @@
+<aside id="sidebar" class="w-72 bg-white shadow-sm border-r hidden md:flex flex-col">
+    <div class="p-6 fixed h-full">
+        <h1 class="text-2xl font-bold text-blue-600 mb-6">ADVS</h1>
+        <nav class="space-y-3 text-sm">
+            <a href="{% url 'dashboard:home' %}"
+               class="block px-4 py-2 rounded hover:bg-blue-100 {% if request.resolver_match.url_name == 'home' %}bg-blue-100 text-blue-700{% endif %}">Dashboard</a>
+            <a href="{% url 'dashboard:datasets' %}"
+               class="block px-4 py-2 rounded hover:bg-blue-100 {% if request.resolver_match.url_name == 'datasets' %}bg-blue-100 text-blue-700{% endif %}">Datasets</a>
+            <a href="{% url 'dashboard:settings' %}"
+               class="block px-4 py-2 rounded hover:bg-blue-100 {% if request.resolver_match.url_name == 'settings' %}bg-blue-100 text-blue-700{% endif %}">Settings</a>
+        </nav>
+
+        <div class="mt-auto p-4">
+            <a href="{% url 'account_logout' %}" class="text-red-500">Logout</a>
+        </div>
+    </div>
+</aside>

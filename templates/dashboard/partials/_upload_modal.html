@@ -1,0 +1,61 @@
+<div class="fixed inset-0 flex items-center justify-center bg-black/25 bg-opacity-40 z-50">
+    <div class="bg-white rounded-lg p-6 w-full max-w-lg">
+        <h2 class="text-xl font-semibold mb-4">Upload Dataset</h2>
+
+        <form
+            method="post"
+            action="{% url 'dashboard:dataset-upload' %}"
+            enctype="multipart/form-data"
+            onsubmit="return lockUploadButton(event)"
+        >
+            {% csrf_token %}
+            {{ form.as_p }}
+
+            <div class="flex justify-end gap-2 mt-4">
+                <button
+                    type="button"
+                    onclick="document.getElementById('modal-container').innerHTML=''"
+                    class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    id="upload-btn"
+                    type="submit"
+                    class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center gap-2"
+                >
+                    <span id="upload-btn-text">Upload</span>
+
+                    <!-- Hidden spinner -->
+                    <svg id="upload-btn-spinner"
+                         class="animate-spin h-5 w-5 text-white hidden"
+                         xmlns="http://www.w3.org/2000/svg"
+                         fill="none"
+                         viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10"
+                                stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor"
+                              d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8h4z"></path>
+                    </svg>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function lockUploadButton(event) {
+    const btn = document.getElementById('upload-btn');
+    const text = document.getElementById('upload-btn-text');
+    const spinner = document.getElementById('upload-btn-spinner');
+
+    btn.disabled = true;
+    btn.classList.add("opacity-70", "cursor-not-allowed");
+
+    text.textContent = "Uploading...";
+    spinner.classList.remove("hidden");
+
+    return true;
+}
+</script>

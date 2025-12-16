@@ -1,0 +1,10 @@
+{
+  "Random Forest": {
+    "exact_accuracy": 0.9688109161793372,
+    "hamming_loss": 0.003996101364522417,
+    "micro_f1": 0.9604628736740598,
+    "macro_f1": 0.4125582197688459,
+    "top1_accuracy": 0.0,
+    "top3_accuracy": 0.0
+  }
+}
